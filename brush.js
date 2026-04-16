@@ -4,13 +4,30 @@ class Brush {
     this.body = Bodies.circle(x, y, radius);
     this.body.restitution = 1; // Make the brush bouncy
     this.color = color(random(255), random(255), random(255));
+
+ 
+    //Subscribe to collision events for this brush
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+      let pairs = event.pairs;
+      for (let pair of pairs) {
+        if (pair.bodyA === this.body || pair.bodyB === this.body) {
+           this.onCollision();
+        }
+      }
+    });
+
 }
 
-  display() {
+
+display() {
     this.keepInBounds();
     noStroke();
     fill(this.color);
     circle(this.body.position.x, this.body.position.y, this.radius * 2);
+  }
+  
+  onCollision() {
+    this.color = color(random(255), random(255), random(255));
   }
 
   keepInBounds() {
