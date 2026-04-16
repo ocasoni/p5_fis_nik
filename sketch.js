@@ -6,26 +6,37 @@ let Engine = Matter.Engine,
 let engine;
 let brush;
 let obstacle;
+let brushes = [];
+
+let NUM_BRUSHES = 100;
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   engine = Engine.create();
-
-  brush = new Brush(width / 2, height / 4, 50);
+  
+  for (let i = 0; i < NUM_BRUSHES; i++) {
+    let size = random(10, 30);
+    brush = new Brush(width / 2, height / 4, size);
+    brushes.push(brush);
+    Composite.add(engine.world, brush.body);
+  }
 
   obstacle = new Obstacle(width /2, 600, 300, 50, PI / 6);
   
-  console.log(obstacle);
 
-  Composite.add(engine.world, [brush.body, obstacle.body]);
+  Composite.add(engine.world, obstacle.body);
+
 }
 
 function draw() {
   background(220);
   
-  brush.display();
+  for (let i= 0; i < brushes.length; i++) {
+    brushes[i].display();
+  }
+  
   obstacle.display();
 
   Engine.update(engine);
-}
-  
+}  
